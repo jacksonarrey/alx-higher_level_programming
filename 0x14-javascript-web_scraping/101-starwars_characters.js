@@ -28,4 +28,4 @@ request(`https://swapi.dev/api/films/${movieId}/`, (error, response, body) => {
       console.log(character.name);
     });
   });
-});
+
