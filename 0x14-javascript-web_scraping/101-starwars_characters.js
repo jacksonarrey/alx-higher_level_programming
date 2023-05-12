@@ -4,30 +4,28 @@
 
 const request = require('request');
 
-const baseApiUrl = 'https://swapi.dev/api';
+const movieId = process.argv[2]; // retrieve movie id from command line arguments
 
-const movieId = process.argv[2];
-
-const movieUrl = `${baseApiUrl}/films/${movieId}/`;
-
-request.get(movieUrl, (error, response, body) => {
-  // checks for error
+request(`https://swapi.dev/api/films/${movieId}/`, (error, response, body) => {
   if (error) {
-    console.error(`Error: ${error}`);
+    console.error(error);
     return;
   }
 
-  const characters = JSON.parse(body).characters;
+  const movie = JSON.parse(body);
+  const charactersUrls = movie.characters;
 
-  characters.forEach((characterUrl) => {
-    request.get(characterUrl, (error, response, body) => {
+  // make a request for each character URL and print the name
+  charactersUrls.forEach((url) => {
+    request(url, (error, response, body) => {
+      // checks for error
       if (error) {
-        console.error(`Error: ${error}`);
+        console.error(error);
         return;
       }
-
-      const characterName = JSON.parse(body).name;
-      console.log(characterName);
+      // pasing JSON Object
+      const character = JSON.parse(body);
+      console.log(character.name);
     });
   });
 });
